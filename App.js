@@ -1,61 +1,47 @@
-
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Text, View, StyleSheet, TextInput, Button, Image } from 'react-native';
 import Constants from 'expo-constants';
 
-export default class App extends Component {
+export default function App(){
 
-  constructor(props){
-    super(props);
-    this.state = {
-      alcool: '',
-      gasolina: '',
-      resultado: ''
-    }
-    this.calcular = this.calcular.bind(this);
-    this.limparCampos = this.limparCampos.bind(this);
+  const [alcool, setAlcool] = useState('');
+  const [gasolina, setGasolina] = useState('');
+  const [resultado, setResultado] = useState(0);
+
+  function calcular(){
+    setResultado((alcool / gasolina) > 0.7 ?'A gasolina está mais em conta.' : 'O álcool está mais em conta.');
   }
 
-  calcular(){
-    this.setState({
-      resultado:(this.state.alcool / this.state.gasolina) > 0.7 ?'A gasolina está mais em conta.' : 'O álcool está mais em conta.'
-    })
+  function limparCampos(){
+    setAlcool('');
+    setGasolina('');
+    setResultado('');
   }
 
-  limparCampos(){
-    this.setState({
-      alcool: 0.0,
-      gasolina: 0.0,
-      resultado: ''
-    })
-  }
+  return (
+    <View  style={{ alignItems: 'center'}}>
+      <Text style={styles.paragraph}>Álcool ou Gasolina</Text>
 
-  render(){
-    return (
-      <View  style={{ alignItems: 'center'}}>
-        <Text style={styles.paragraph}>Álcool ou Gasolina</Text>
+      <Image style={styles.image} source={require('./img/alcool-ou-gasolina.png')}></Image>
 
-        <Image style={styles.image} source={require('./img/alcool-ou-gasolina.png')}></Image>
+      <TextInput style={styles.inputs}  placeholder="Digite o preço do álcool: " onChangeText={(e) => setAlcool(e)} value={alcool}></TextInput>
 
-        <TextInput style={styles.inputs}  placeholder="Digite o preço do álcool: " onChangeText={(e) => this.setState({alcool:e})} value={this.state.alcool}></TextInput>
+      <TextInput style={styles.inputs}  placeholder="Digite o preço da gasolina: " onChangeText={(e) => setGasolina(e)} value={gasolina}></TextInput>
 
-        <TextInput style={styles.inputs}  placeholder="Digite o preço da gasolina: " onChangeText={(e) => this.setState({gasolina:e})} value={this.state.gasolina}></TextInput>
-
-        <View style={styles.buttons}>
-          <Button color={'green'} title='Verificar' onPress={this.calcular}></Button>
-        </View>
-
-        <View style={styles.buttons}>
-          <Button title='Limpar' onPress={this.limparCampos}></Button>
-        </View>
-
-        <Text> Valor do litro do álcool: {this.state.alcool} </Text>
-        <Text> Valor do litro da gasolina: {this.state.gasolina} </Text>
-
-        <Text style={styles.paragraph}> Resultado: {this.state.resultado}</Text>
+      <View style={styles.buttons}>
+        <Button color={'green'} title='Verificar' onPress={calcular}></Button>
       </View>
-    );
-  }
+
+      <View style={styles.buttons}>
+        <Button title='Limpar' onPress={limparCampos}></Button>
+      </View>
+
+      <Text> Valor do litro do álcool: {alcool} </Text>
+      <Text> Valor do litro da gasolina: {gasolina} </Text>
+
+      <Text style={styles.paragraph}> Resultado: {resultado}</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
